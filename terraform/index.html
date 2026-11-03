@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinCorp Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #11213b;
+    --slate: #3a4a5e;
+    --mist: #eef2f5;
+    --line: #cfd8e0;
+    --teal: #0f7b6c;
+    --gold: #e9c46a;
+    --white: #ffffff;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--slate);
+    background: var(--mist);
+    line-height: 1.55;
+  }
+  a { color: var(--teal); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .brand {
+    font-family: var(--serif); font-weight: 600; font-size: 22px; color: var(--ink);
+    text-decoration: none; letter-spacing: -0.01em;
+  }
+  .brand span { color: var(--teal); }
+  .nav nav a {
+    text-decoration: none; color: var(--slate); font-weight: 500; margin-left: 28px; font-size: 15px;
+  }
+  .nav nav a:hover { color: var(--ink); }
+
+  .hero {
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center;
+    padding: 72px 0 64px;
+  }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 6vw, 68px);
+    line-height: 1.02; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 20px;
+  }
+  .hero p { font-size: 18px; max-width: 46ch; margin: 0 0 28px; }
+  .btn {
+    display: inline-block; background: var(--teal); color: var(--white); text-decoration: none;
+    padding: 12px 22px; border-radius: 6px; font-weight: 600; font-size: 15px;
+  }
+  .btn:hover { background: #0c6558; }
+  .btn.quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); margin-left: 10px; }
+  .btn.quiet:hover { background: var(--white); }
+
+  /* ledger panel */
+  .ledger {
+    background: var(--white); border: 1px solid var(--line); border-radius: 10px;
+    padding: 24px 24px 8px; box-shadow: 0 12px 30px rgba(17,33,59,0.08);
+  }
+  .ledger h2 {
+    font-family: var(--serif); font-weight: 600; font-size: 18px; color: var(--ink); margin: 0 0 4px;
+  }
+  .ledger .asof { font-size: 13px; color: #6b7a8c; margin-bottom: 14px; }
+  .ledger table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .ledger td { padding: 11px 0; border-top: 1px solid var(--line); font-size: 15px; }
+  .ledger td:last-child { text-align: right; color: var(--ink); font-weight: 500; }
+  .ledger tr.total td { border-top: 2px solid var(--ink); font-weight: 600; color: var(--ink); }
+  .ledger .pos { color: var(--teal); }
+
+  /* deployment path — the one bold element */
+  .path { background: var(--ink); color: var(--white); padding: 56px 0; }
+  .path h2 {
+    font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 0 0 8px; letter-spacing: -0.01em;
+  }
+  .path .lead { color: #b9c4d2; max-width: 60ch; margin: 0 0 36px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+  .steps::before {
+    content: ""; position: absolute; left: 12px; right: 12px; top: 13px; height: 2px; background: var(--gold);
+  }
+  .step { position: relative; padding: 0 20px 0 0; }
+  .step::before {
+    content: ""; display: block; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--ink); border: 3px solid var(--gold); margin-bottom: 18px; position: relative;
+  }
+  .step strong { display: block; color: var(--white); font-weight: 600; font-size: 17px; margin-bottom: 6px; }
+  .step span { color: #b9c4d2; font-size: 14px; }
+  .step code { color: var(--gold); font-size: 13px; }
+
+  /* services as a ruled list, not cards */
+  .services { padding: 64px 0; }
+  .services h2 {
+    font-family: var(--serif); font-weight: 400; font-size: 30px; color: var(--ink); margin: 0 0 28px;
+  }
+  .svc { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 22px 0; border-top: 1px solid var(--line); }
+  .svc:last-child { border-bottom: 1px solid var(--line); }
+  .svc h3 { margin: 0; font-size: 18px; color: var(--ink); font-weight: 600; }
+  .svc p { margin: 0; max-width: 62ch; }
+
+  footer { padding: 32px 0 48px; font-size: 14px; color: #6b7a8c; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; padding: 48px 0 40px; }
+    .steps { grid-template-columns: 1fr; gap: 24px; }
+    .steps::before { left: 12px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
+    .step { padding-left: 40px; }
+    .step::before { position: absolute; left: 0; top: 0; margin: 0; }
+    .svc { grid-template-columns: 1fr; gap: 6px; }
+    .nav nav a { margin-left: 16px; }
+    .nav nav a:last-child { display: none; }
+    .cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .btn.quiet { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero h1, .hero p, .hero .cta { animation: rise .6s ease-out both; }
+    .hero p { animation-delay: .08s; } .hero .cta { animation-delay: .16s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#">Fin<span>Corp</span></a>
+    <nav>
+      <a href="#accounts">Accounts</a>
+      <a href="#services">Services</a>
+      <a href="#how">How this site runs</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="wrap hero" id="accounts">
+    <div>
+      <h1>Banking that keeps its books in order.</h1>
+      <p>FinCorp is a demonstration bank built to show how a regulated financial platform is provisioned, governed and operated on Azure — every resource defined in code, every change reviewed before it ships.</p>
+      <div class="cta">
+        <a class="btn" href="#how">See the deployment path</a>
+        <a class="btn quiet" href="#services">Explore services</a>
+      </div>
+    </div>
+
+    <aside class="ledger" aria-label="Sample account summary">
+      <h2>Account summary</h2>
+      <div class="asof">Sample data · as of today</div>
+      <table>
+        <tr><td>Everyday checking</td><td>$4,218.40</td></tr>
+        <tr><td>High-yield savings</td><td>$18,950.00</td></tr>
+        <tr><td>Interest this month</td><td class="pos">+$62.17</td></tr>
+        <tr><td>Pending card payments</td><td>−$340.00</td></tr>
+        <tr class="total"><td>Available</td><td>$22,890.57</td></tr>
+      </table>
+    </aside>
+  </section>
+
+  <section class="path" id="how">
+    <div class="wrap">
+      <h2>How this page reached your browser</h2>
+      <p class="lead">No one clicked through the Azure portal to build this. The page you are reading was shipped by a pipeline, from a Git commit to a public URL, in about two minutes.</p>
+      <div class="steps">
+        <div class="step">
+          <strong>Code committed</strong>
+          <span>Terraform files pushed to Azure Repos — <code>webapp.tf</code>, <code>backend.tf</code>, variables.</span>
+        </div>
+        <div class="step">
+          <strong>Pipeline triggered</strong>
+          <span>Azure Pipelines runs <code>init → validate → plan → apply</code> on a hosted Ubuntu agent.</span>
+        </div>
+        <div class="step">
+          <strong>Identity verified</strong>
+          <span>Workload identity federation — no stored secrets. State is locked in Azure Storage.</span>
+        </div>
+        <div class="step">
+          <strong>Site published</strong>
+          <span>Terraform creates the storage account, enables static hosting and uploads this page to <code>$web</code>.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap services" id="services">
+    <h2>What the platform is built to do</h2>
+    <div class="svc">
+      <h3>Storage administration</h3>
+      <p>Blob containers, file shares and managed disks with lifecycle rules that move data from hot to cool to archive, soft delete and immutable retention for records that must not change.</p>
+    </div>
+    <div class="svc">
+      <h3>Governance and access</h3>
+      <p>Azure Policy enforces tagging and allowed regions; role-based access keeps every identity on least privilege; resource locks protect what must not be deleted.</p>
+    </div>
+    <div class="svc">
+      <h3>Backup and recovery</h3>
+      <p>Recovery Services vaults, geo-redundant storage and tested restores, so a regional outage is a drill the team has already run.</p>
+    </div>
+    <div class="svc">
+      <h3>Cost and capacity</h3>
+      <p>Budgets with alerts, orphaned-resource sweeps and right-sized tiers, reported monthly so spend never surprises anyone.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>FinCorp is a fictional bank used for an Azure infrastructure portfolio project.</div>
+    <div>Built by Naveen Kolli · Terraform · Azure Pipelines · Azure Storage</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  sc: sc-azure-fincorp
+
+steps:
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: '1.9.5'
+
+- task: TerraformTaskV4@4
+  displayName: init
+  inputs:
+    provider: azurerm
+    command: init
+    backendServiceArm: $(sc)
+    backendAzureRmResourceGroupName: myrg
+    backendAzureRmStorageAccountName: stfincorptfstate
+    backendAzureRmContainerName: tfstate
+    backendAzureRmKey: webapp.tfstate
+
+- task: TerraformTaskV4@4
+  displayName: validate
+  inputs:
+    provider: azurerm
+    command: validate
+
+- task: TerraformTaskV4@4
+  displayName: plan
+  inputs:
+    provider: azurerm
+    command: plan
+    environmentServiceNameAzureRM: $(sc)
+
+- task: TerraformTaskV4@4
+  displayName: apply
+  inputs:
+    provider: azurerm
+    command: apply
+    environmentServiceNameAzureRM: $(sc)
+    commandOptions: -auto-approve
